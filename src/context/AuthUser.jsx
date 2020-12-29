@@ -16,7 +16,7 @@ const reducer = (state, action) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, { isAuthenticated: true });
+  const [state, dispatch] = useReducer(reducer, { isAuthenticated: false });
 
   useEffect(() => {
     const fetchUser = async () => {
