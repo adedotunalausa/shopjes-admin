@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
 import Popover, { PLACEMENT } from '../../../components/Popover/Popover';
 import { callApi } from '../../../utils'
-import { useDispatchCurrentUser, useCurrentUser } from '../../../context/AuthUser'
+import { useDispatchCurrentUser } from '../../../context/AuthUser'
 import Notification from '../../../components/Notification/Notification';
 import { STAFF_MEMBERS, SETTINGS } from '../../../settings/constants';
 import { NotificationIcon } from '../../../assets/icons/NotificationIcon';
@@ -41,10 +41,18 @@ const notificationData = [
     message: 'Order #34567 had been placed',
   },
 ];
+
+const isValidUser = () => {
+  const user = localStorage.getItem('user');
+  if (user) return JSON.parse(user);
+  return null;
+};
+
 const Topbar = ({ refs }) => {
   const logoutDispatch = useDispatchCurrentUser();
   const drawerDispatch = useDrawerDispatch();
-  const currentUser = useCurrentUser();
+  const currentUser = isValidUser();
+  const history = useHistory();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const openDrawer = useCallback(
@@ -53,8 +61,14 @@ const Topbar = ({ refs }) => {
   );
 
   const handleLogout = async () => {
+
     await callApi("/logout", "POST")
+
     logoutDispatch({ type: "LOGOUT" })
+
+    localStorage.removeItem('user')
+
+    history.push("/login");
   }
 
   return (
@@ -172,7 +186,7 @@ const Topbar = ({ refs }) => {
             <ProfileImg>
               <Image src={UserImage} alt="user" />
             </ProfileImg>
-            {currentUser.isAuthenticated && `Welcome, ${currentUser.username}`}
+            {currentUser && `Welcome, ${currentUser.username}`}
           </ProfileWrapper>
         </Popover>
       </TopbarRightSide>

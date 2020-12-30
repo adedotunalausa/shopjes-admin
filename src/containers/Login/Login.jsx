@@ -51,6 +51,10 @@ export default function Login() {
         throw "Cannot login please try again!";
       }
 
+      // console.log(response.user);
+
+      localStorage.setItem('user', JSON.stringify(response.user))
+
       dispatch({ type: "LOGIN", user: response.user })
 
       history.push("/");

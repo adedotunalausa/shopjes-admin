@@ -7,7 +7,7 @@ const AuthDispatchContext = createContext();
 const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
-      return { ...action.user, isAuthenticated: true };
+      return { ...state, ...action.user, isAuthenticated: true };
     case "LOGOUT":
       return { isAuthenticated: false };
     default:

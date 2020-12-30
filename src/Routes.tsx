@@ -12,21 +12,26 @@ import {
 } from './settings/constants';
 import { InLineLoader } from './components/InlineLoader/InlineLoader';
 import AdminLayout from './containers/Layout/Layout';
-import { useCurrentUser } from './context/AuthUser'
 const Login = lazy(() => import('./containers/Login/Login'));
 const Dashboard = lazy(() => import('./containers/Dashboard/Dashboard'));
 const Products = lazy(() => import('./containers/Products/Products'));
 const Categories = lazy(() => import('./containers/Category/Category'))
 
+const isValidUser = () => {
+const user = localStorage.getItem('user');
+if (user) return true;
+return false;
+};
+
 const PrivateRoute = ({ children, ...rest }) => {
 
-  const currentUser = useCurrentUser();
+  const currentUser =isValidUser();
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        currentUser.isAuthenticated? (
+        currentUser ? (
           children
         ) : (
           <Redirect
