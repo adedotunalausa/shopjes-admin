@@ -12,7 +12,6 @@ import Select from '../../components/Select/Select';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
 import { callApiPost } from '../../utils'
 import { toast } from 'react-toastify';
-import { InLineLoader } from '../../components/InlineLoader/InlineLoader'
 
 import {
   Form,
@@ -110,7 +109,7 @@ const AddProduct = (props) => {
 
     try {
 
-      const imageResponse = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${isValidToken().jwt}`,
@@ -123,16 +122,23 @@ const AddProduct = (props) => {
           newProduct.image = data[0].url
         }).catch(error => {
           console.log(error);
+          toast.error("There was an error: " + error, {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
         })
 
       const response = await callApiPost("/products", "POST",
         newProduct, isValidToken().jwt)
       console.log(response);
 
-      if (!response || !imageResponse) {
-        <InLineLoader />
-      } else if (response.error || imageResponse.error) {
-        toast.error("There was an error: " + response.message + imageResponse.message, {
+      if (response.error) {
+        toast.error("There was an error: " + response.message, {
           position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,

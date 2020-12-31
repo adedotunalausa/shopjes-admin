@@ -79,8 +79,7 @@ const isValidToken = () => {
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loadingMore, toggleLoading] = useState(false);
+  // const [loadingMore, toggleLoading] = useState(false);
   const [type, setType] = useState([]);
   const [priceOrder, setPriceOrder] = useState([]);
   const [search, setSearch] = useState([]);
@@ -90,7 +89,6 @@ export default function Products() {
       .then(response => setProducts(response))
       .catch(error => {
         console.log(error);
-        setProducts([]);
         toast.error("There was an error: " + error, {
           position: "bottom-center",
           autoClose: 50000,
@@ -106,9 +104,9 @@ export default function Products() {
     };
   }, [])
 
-  function loadMore() {
-    toggleLoading(true);
-  }
+  // function loadMore() {
+  //   toggleLoading(true);
+  // }
   function handlePriceSort({ value }) {
     setPriceOrder(value);
     // if (value.length) {
