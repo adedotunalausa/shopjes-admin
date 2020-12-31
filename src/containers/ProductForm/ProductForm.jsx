@@ -110,25 +110,29 @@ const AddProduct = (props) => {
 
     try {
 
-      await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
+      const imageResponse = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
         method: "POST",
-        Authorization: `Bearer ${isValidToken().jwt}`,
+        headers: {
+          Authorization: `Bearer ${isValidToken().jwt}`,
+        },
         // credentials: "include",
         body: imageData
       }).then(response => response.json())
         .then(data => {
           console.log("File Upload data", data)
           newProduct.image = data[0].url
+        }).catch(error => {
+          console.log(error);
         })
 
       const response = await callApiPost("/products", "POST",
         newProduct, isValidToken().jwt)
       console.log(response);
 
-      if (!response) {
+      if (!response || !imageResponse) {
         <InLineLoader />
-      } else if (response.error) {
-        toast.error("There was an error: " + response.message, {
+      } else if (response.error || imageResponse.error) {
+        toast.error("There was an error: " + response.message + imageResponse.message, {
           position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -151,6 +155,15 @@ const AddProduct = (props) => {
 
     } catch (error) {
       console.log(error);
+      toast.error("There was an error: " + error, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
 
     closeDrawer();

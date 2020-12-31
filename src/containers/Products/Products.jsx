@@ -10,6 +10,7 @@ import ProductCard from '../../components/ProductCard/ProductCard';
 import NoResult from '../../components/NoResult/NoResult';
 import { CURRENCY } from '../../settings/constants';
 import Placeholder from '../../components/Placeholder/Placeholder';
+import { toast } from 'react-toastify';
 
 export const ProductsRow = styled('div', ({ $theme }) => ({
   display: 'flex',
@@ -87,23 +88,24 @@ export default function Products() {
   useEffect(() => {
     callApiGet("/products", "GET", isValidToken().jwt)
       .then(response => setProducts(response))
-      .then(data => {
-        console.log(data);
-      })
       .catch(error => {
         console.log(error);
-        setError(error)
+        setProducts([]);
+        toast.error("There was an error: " + error, {
+          position: "bottom-center",
+          autoClose: 50000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
       })
     return () => {
       setProducts([]);
     };
   }, [])
 
-  console.log(products);
-
-  if (error) {
-    return <div>Error! {error}</div>;
-  }
   function loadMore() {
     toggleLoading(true);
   }
