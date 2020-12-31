@@ -10,8 +10,8 @@ import Input from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import Select from '../../components/Select/Select';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
-import { callApiPost } from '../../utils'
 import { toast } from 'react-toastify';
+import Axios from 'axios';
 
 import {
   Form,
@@ -49,6 +49,8 @@ const isValidToken = () => {
   return false;
 };
 
+const calculatePercent = (value, total) => Math.round(value / total * 100)
+
 const AddProduct = (props) => {
   const dispatch = useDrawerDispatch();
   const closeDrawer = useCallback(() => dispatch({ type: 'CLOSE_DRAWER' }), [
@@ -59,6 +61,8 @@ const AddProduct = (props) => {
   // const [tag, setTag] = useState([]);
   const [file, setFile] = useState({ file: null })
   const [description, setDescription] = useState('');
+  const [percent, setPercent] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   React.useEffect(() => {
     register({ name: 'type' });
@@ -89,6 +93,7 @@ const AddProduct = (props) => {
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const newProduct = {
       name: data.name,
       type: data.type[0].value,
@@ -107,61 +112,23 @@ const AddProduct = (props) => {
     const imageData = new FormData();
     imageData.append('files', file)
 
+    const token = isValidToken().jwt
+
     try {
 
-      await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${isValidToken().jwt}`,
-        },
-        // credentials: "include",
-        body: imageData
-      }).then(response => response.json())
-        .then(data => {
-          console.log("File Upload data", data)
-          newProduct.image = data[0].url
-        }).catch(error => {
-          console.log(error);
-          toast.error("There was an error: " + error, {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
-        })
+      const imageResponse = await Axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_API_URL}/upload`,
+        data: imageData,
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
-      const response = await callApiPost("/products", "POST",
-        newProduct, isValidToken().jwt)
-      console.log(response);
-
-      if (response.error) {
-        toast.error("There was an error: " + response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
-      } else {
-        toast.success("Product uploaded successfully", {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+      if (imageResponse) {
+        newProduct.image = imageResponse.data[0].url
       }
-
     } catch (error) {
       console.log(error);
-      toast.error("There was an error: " + error, {
+      toast.error("There was an image upload error: " + error, {
         position: "bottom-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -172,6 +139,46 @@ const AddProduct = (props) => {
       })
     }
 
+    try {
+
+      const response = await Axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_API_URL}/products`,
+        data: newProduct,
+        headers: { Authorization: `Bearer ${token}` },
+        onUploadProgress: (progress) => setPercent(calculatePercent(progress.loaded, progress.total))
+      })
+      console.log(response);
+
+      if (response.status === 200) {
+
+        toast.success("Product uploaded successfully", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error("There was a product upload: " + error, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+
+    setLoading(false);
+
     closeDrawer();
   };
 
@@ -179,6 +186,17 @@ const AddProduct = (props) => {
     <>
       <DrawerTitleWrapper>
         <DrawerTitle>Add Product</DrawerTitle>
+        <div style={{
+          width: "200px", height: "5px",
+          backgroundColor: "#eee", margin: "24px"
+        }}>
+          <div style={{
+            width: `${percent}%`,
+            height: "4px",
+            backgroundColor: "#EA1C44"
+          }}></div>
+        </div>
+        {loading && <DrawerTitle>Uploading...</DrawerTitle>}
       </DrawerTitleWrapper>
 
       <Form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%' }}>
