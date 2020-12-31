@@ -4,7 +4,7 @@ import { styled, withStyle } from 'baseui';
 import { Grid, Row as Rows, Col as Column } from '../../components/FlexBox/FlexBox';
 import Input from '../../components/Input/Input';
 import Select from '../../components/Select/Select';
-import { callApi } from '../../utils'
+import { callApiGet } from '../../utils'
 import { Header, Heading } from '../../components/Wrapper.style';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import NoResult from '../../components/NoResult/NoResult';
@@ -69,6 +69,13 @@ const priceSelectOptions = [
   { value: 'lowestToHighest', label: 'Lowest To Highest' },
 ];
 
+const isValidToken = () => {
+  const token = localStorage.getItem('user');
+  // JWT decode & check token validity & expiration.
+  if (token) return JSON.parse(token);
+  return false;
+};
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -78,7 +85,7 @@ export default function Products() {
   const [search, setSearch] = useState([]);
 
   useEffect(() => {
-    callApi("/products", "GET")
+    callApiGet("/products", "GET", isValidToken().jwt)
       .then(response => setProducts(response))
       .then(data => {
         console.log(data);

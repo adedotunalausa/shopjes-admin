@@ -10,7 +10,7 @@ import Input from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import Select from '../../components/Select/Select';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
-import { callApi } from '../../utils'
+import { callApiPost } from '../../utils'
 import { toast } from 'react-toastify';
 
 import {
@@ -41,6 +41,13 @@ const options = [
 const typeOptions = [
   { value: 'shop', name: 'Shop', id: '1' },
 ];
+
+const isValidToken = () => {
+  const token = localStorage.getItem('user');
+  // JWT decode & check token validity & expiration.
+  if (token) return JSON.parse(token);
+  return false;
+};
 
 const AddProduct = () => {
   const dispatch = useDrawerDispatch();
@@ -108,7 +115,8 @@ const AddProduct = () => {
 
         await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
           method: "PATCH",
-          credentials: "include",
+          Authorization: `Bearer ${isValidToken().jwt}`,
+          // credentials: "include",
           body: imageData
         }).then(response => response.json())
           .then(data => {
@@ -118,7 +126,8 @@ const AddProduct = () => {
 
       }
 
-      const response = await callApi(`/products/${defaultData.id}`, "PUT", newProduct)
+      const response = await callApiPost(`/products/${defaultData.id}`, "PUT",
+        newProduct, isValidToken().jwt)
       console.log(response);
 
       if (response.error) {

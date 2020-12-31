@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useContext, createContext } from "react";
-import { callApi } from "../utils";
+import React, { useReducer, useContext, createContext } from "react";
+// import { callApi } from "../utils";
 
 const AuthContext = createContext();
 const AuthDispatchContext = createContext();
@@ -18,17 +18,17 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, { isAuthenticated: false });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await callApi("/users/me", "GET")
-      // console.log('data user', user)
-      if (user.id) {
-        dispatch({ type: "LOGIN", user });
-        return;
-      }
-    }
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const user = await callApi("/users/me", "GET")
+  //     // console.log('data user', user)
+  //     if (user.id) {
+  //       dispatch({ type: "LOGIN", user });
+  //       return;
+  //     }
+  //   }
+  //   fetchUser();
+  // }, []);
 
   return (
     <AuthDispatchContext.Provider value={dispatch}>

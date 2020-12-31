@@ -17,7 +17,7 @@ import {
 import { Plus } from '../../assets/icons/Plus';
 import * as icons from '../../assets/icons/category-icons';
 import NoResult from '../../components/NoResult/NoResult';
-import { callApi } from '../../utils'
+import { callApiGet } from '../../utils'
 // import Axios from 'axios'
 
 // const GET_CATEGORIES = gql`
@@ -68,6 +68,13 @@ const categorySelectOptions = [
   { value: 'shop', label: 'shop' },
 ];
 
+const isValidToken = () => {
+  const token = localStorage.getItem('user');
+  // JWT decode & check token validity & expiration.
+  if (token) return JSON.parse(token);
+  return false;
+};
+
 export default function Category() {
   const [category, setCategory] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -82,7 +89,7 @@ export default function Category() {
   );
 
   useEffect(() => {
-    callApi("/categories", "GET")
+    callApiGet("/categories", "GET", isValidToken().jwt)
       .then(response => setCategories(response))
       .then(data => {
         console.log(data);

@@ -12,7 +12,7 @@ import { Wrapper, FormWrapper, LogoImage, LogoWrapper } from './Login.style';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import Logoimage from '../../assets/image/Shopjes.png';
-import { callApi } from '../../utils'
+import { callApiAuth } from '../../utils'
 import { useDispatchCurrentUser } from '../../context/AuthUser'
 
 const initialValues = {
@@ -41,7 +41,7 @@ export default function Login() {
     setErrorMsg(null);
 
     try {
-      const response = await callApi("/auth/local", "POST", {
+      const response = await callApiAuth("/auth/local", "POST", {
         identifier: email,
         password: password,
       });
@@ -53,7 +53,7 @@ export default function Login() {
 
       // console.log(response.user);
 
-      localStorage.setItem('user', JSON.stringify(response.user))
+      localStorage.setItem('user', JSON.stringify(response))
 
       dispatch({ type: "LOGIN", user: response.user })
 

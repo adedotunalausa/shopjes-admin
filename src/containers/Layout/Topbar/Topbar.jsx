@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
 import Popover, { PLACEMENT } from '../../../components/Popover/Popover';
-import { callApi } from '../../../utils'
+import { callApiAuth } from '../../../utils'
 import { useDispatchCurrentUser } from '../../../context/AuthUser'
 import Notification from '../../../components/Notification/Notification';
 import { STAFF_MEMBERS, SETTINGS } from '../../../settings/constants';
@@ -51,7 +51,7 @@ const isValidUser = () => {
 const Topbar = ({ refs }) => {
   const logoutDispatch = useDispatchCurrentUser();
   const drawerDispatch = useDrawerDispatch();
-  const currentUser = isValidUser();
+  const currentUser = isValidUser().user;
   const history = useHistory();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -62,7 +62,7 @@ const Topbar = ({ refs }) => {
 
   const handleLogout = async () => {
 
-    await callApi("/logout", "POST")
+    await callApiAuth("/logout", "POST")
 
     logoutDispatch({ type: "LOGOUT" })
 
