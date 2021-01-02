@@ -12,6 +12,7 @@ import Select from '../../components/Select/Select';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
 import { toast } from 'react-toastify';
 import Axios from 'axios';
+import { categories } from "../../data/categories"
 
 import {
   Form,
@@ -21,26 +22,32 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 
-// const options = [
-//   { value: 'Beverage', name: 'Beverage', id: '1' },
-//   { value: 'Grocery', name: 'Grocery', id: '2' },
-//   { value: 'Sauce, Oils & Vinegars', name: 'Sauce, Oils & Vinegars', id: '3' },
-//   { value: 'Rice', name: 'Rice', id: '4' },
-//   { value: 'Noodles', name: 'Noodles', id: '5' },
-//   { value: 'Seasoning Herbs & Spices', name: 'Seasoning Herbs & Spices', id: '6' },
-//   { value: 'Snacks', name: 'Snacks', id: '7' },
-//   { value: 'African', name: 'African', id: '8' },
-//   { value: 'Caribbean', name: 'Caribbean', id: '9' },
-//   { value: 'Asian', name: 'Asian', id: '10' },
-//   { value: 'Mediterranean', name: 'Mediterranean', id: '11' },
-//   { value: 'Chilled', name: 'Chilled', id: '12' },
-//   { value: 'Food Services', name: 'Food Services', id: '13' },
-//   { value: 'Non Food', name: 'Non Food', id: '13' },
-// ];
-
 const typeOptions = [
   { value: 'shop', name: 'Shop', id: '1' },
 ];
+
+const categoryOptionsFetcher = () => {
+  const list = categories.map(item => {
+    return {
+      value: item.title,
+      name: item.title,
+      id: item.id
+    }
+  })
+  return list;
+}
+
+const subCategoryOptionsFetcher = (input) => {
+  const options = categories.filter(item => item.title === input)[0]
+    .children.map(item => {
+      return {
+        value: item.title,
+        name: item.title,
+        id: item.id
+      }
+    })
+  return options;
+}
 
 const isValidToken = () => {
   const token = localStorage.getItem('user');
@@ -58,15 +65,19 @@ const AddProduct = (props) => {
   ]);
   const { register, handleSubmit, setValue } = useForm();
   const [type, setType] = useState([]);
-  // const [tag, setTag] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
   const [file, setFile] = useState({ file: null })
   const [description, setDescription] = useState('');
   const [percent, setPercent] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [subCategoryOptions, setSubCategoryOptions] = useState([])
+  const categoryOptions = categoryOptionsFetcher();
 
   React.useEffect(() => {
     register({ name: 'type' });
-    register({ name: 'categories' });
+    register({ name: 'category', required: true });
+    register({ name: 'subCategory', required: true });
     // register({ name: 'image', required: true });
     register({ name: 'description' });
   }, [register]);
@@ -77,14 +88,21 @@ const AddProduct = (props) => {
     setDescription(value);
   };
 
-  // const handleMultiChange = ({ value }) => {
-  //   setValue('categories', value);
-  //   setTag(value);
-  // };
-
   const handleTypeChange = ({ value }) => {
     setValue('type', value);
     setType(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setValue('category', value);
+    setCategory(value);
+    const selectedOption = subCategoryOptionsFetcher(value[0].value)
+    setSubCategoryOptions(selectedOption);
+  };
+
+  const handleSubCategoryChange = ({ value }) => {
+    setValue('subCategory', value);
+    setSubCategory(value);
   };
 
   const handleUploader = (files) => {
@@ -98,7 +116,6 @@ const AddProduct = (props) => {
       name: data.name,
       type: data.type[0].value,
       description: data.description,
-      // image: data.image && data.image.length !== 0 ? data.image.name : '',
       image: "",
       price: Number(data.price),
       unit: data.unit,
@@ -106,7 +123,8 @@ const AddProduct = (props) => {
       discountInPercent: Number(data.discountInPercent),
       quantity: Number(data.quantity),
       slug: data.name.toLowerCase().trim().split(" ").join("-"),
-      // categories: data.tag
+      category: data.category[0].value,
+      sub_category: data.subCategory[0].value
     };
 
     const imageData = new FormData();
@@ -166,7 +184,7 @@ const AddProduct = (props) => {
 
     } catch (error) {
       console.log(error);
-      toast.error("There was a product upload: " + error, {
+      toast.error("There was a product upload error: " + error, {
         position: "bottom-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -359,15 +377,15 @@ const AddProduct = (props) => {
                   />
                 </FormFields>
 
-                {/* <FormFields>
-                  <FormLabel>Categories</FormLabel>
+                <FormFields>
+                  <FormLabel>Category</FormLabel>
                   <Select
-                    options={options}
+                    options={categoryOptions}
                     labelKey="name"
                     valueKey="value"
-                    placeholder="Product Tag"
-                    value={tag}
-                    onChange={handleMultiChange}
+                    placeholder="Category"
+                    value={category}
+                    onChange={handleCategoryChange}
                     overrides={{
                       Placeholder: {
                         style: ({ $theme }) => {
@@ -385,6 +403,24 @@ const AddProduct = (props) => {
                           };
                         },
                       },
+                      OptionContent: {
+                        style: ({ $theme, $selected }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $selected
+                              ? $theme.colors.textDark
+                              : $theme.colors.textNormal,
+                          };
+                        },
+                      },
+                      SingleValue: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
+                        },
+                      },
                       Popover: {
                         props: {
                           overrides: {
@@ -395,9 +431,65 @@ const AddProduct = (props) => {
                         },
                       },
                     }}
-                    multi
                   />
-                </FormFields> */}
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Sub-Category</FormLabel>
+                  <Select
+                    options={subCategoryOptions}
+                    labelKey="name"
+                    valueKey="value"
+                    placeholder="Sub-Category"
+                    value={subCategory}
+                    onChange={handleSubCategoryChange}
+                    overrides={{
+                      Placeholder: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
+                        },
+                      },
+                      DropdownListItem: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
+                        },
+                      },
+                      OptionContent: {
+                        style: ({ $theme, $selected }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $selected
+                              ? $theme.colors.textDark
+                              : $theme.colors.textNormal,
+                          };
+                        },
+                      },
+                      SingleValue: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
+                        },
+                      },
+                      Popover: {
+                        props: {
+                          overrides: {
+                            Body: {
+                              style: { zIndex: 5 },
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </FormFields>
               </DrawerBox>
             </Col>
           </Row>

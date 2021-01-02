@@ -1,10 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { withStyle } from 'baseui';
 import { Grid, Row as Rows, Col as Column } from '../../components/FlexBox/FlexBox';
-import { useDrawerDispatch } from '../../context/DrawerContext';
+// import { useDrawerDispatch } from '../../context/DrawerContext';
 import Select from '../../components/Select/Select';
 import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button';
+// import Button from '../../components/Button/Button';
 import Checkbox from '../../components/CheckBox/CheckBox';
 import { Wrapper, Header, Heading } from '../../components/Wrapper.style';
 import {
@@ -14,31 +14,12 @@ import {
   StyledCell,
   ImageWrapper,
 } from './Category.style';
-import { Plus } from '../../assets/icons/Plus';
+// import { Plus } from '../../assets/icons/Plus';
 import * as icons from '../../assets/icons/category-icons';
 import NoResult from '../../components/NoResult/NoResult';
-import { callApiGet } from '../../utils'
+// import { callApiGet } from '../../utils'
 // import Axios from 'axios'
-
-// const GET_CATEGORIES = gql`
-//   query getCategories($type: String, $searchBy: String) {
-//     categories(type: $type, searchBy: $searchBy) {
-//       id
-//       icon
-//       name
-//       slug
-//       type
-//     }
-//   }
-// `;
-
-// var data = callApi("/categories", "GET")
-//   .then(response => response)
-//   .catch(error => {
-//     console.log(error);
-//   })
-
-// var error = data.error
+import { categories } from "../../data/categories"
 
 // const apiUrl = `${process.env.REACT_APP_API_URL}/categories`;
 // const data = callApi("/products", "GET")
@@ -68,44 +49,44 @@ const categorySelectOptions = [
   { value: 'shop', label: 'shop' },
 ];
 
-const isValidToken = () => {
-  const token = localStorage.getItem('user');
-  // JWT decode & check token validity & expiration.
-  if (token) return JSON.parse(token);
-  return false;
-};
+// const isValidToken = () => {
+//   const token = localStorage.getItem('user');
+//   // JWT decode & check token validity & expiration.
+//   if (token) return JSON.parse(token);
+//   return false;
+// };
 
 export default function Category() {
   const [category, setCategory] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null)
+  // const [categories, setCategories] = useState([]);
+  // const [error, setError] = useState(null)
   const [search, setSearch] = useState('');
-  const dispatch = useDrawerDispatch();
+  // const dispatch = useDrawerDispatch();
   const [checkedId, setCheckedId] = useState([]);
   const [checked, setChecked] = useState(false);
-  const openDrawer = useCallback(
-    () => dispatch({ type: 'OPEN_DRAWER', drawerComponent: 'CATEGORY_FORM' }),
-    [dispatch]
-  );
+  // const openDrawer = useCallback(
+  //   () => dispatch({ type: 'OPEN_DRAWER', drawerComponent: 'CATEGORY_FORM' }),
+  //   [dispatch]
+  // );
 
-  useEffect(() => {
-    callApiGet("/categories", "GET", isValidToken().jwt)
-      .then(response => setCategories(response))
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.log(error);
-        setError(error)
-      })
-    return () => {
-      setCategories([]); // This worked for me
-    };
-  }, [])
+  // useEffect(() => {
+  //   callApiGet("/categories", "GET", isValidToken().jwt)
+  //     .then(response => setCategories(response))
+  //     .then(data => {
+  //       console.log(data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //       setError(error)
+  //     })
+  //   return () => {
+  //     setCategories([]); // This worked for me
+  //   };
+  // }, [])
 
-  if (error) {
-    return <div>Error! {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error! {error.message}</div>;
+  // }
 
   function handleSearch(event) {
     const value = event.currentTarget.value;
@@ -273,7 +254,7 @@ export default function Category() {
                             <Icon name={item.icon} />
                           </ImageWrapper>
                         </StyledCell>
-                        <StyledCell>{item.name}</StyledCell>
+                        <StyledCell>{item.title}</StyledCell>
                         <StyledCell>{item.slug}</StyledCell>
                         <StyledCell>{item.type}</StyledCell>
                       </React.Fragment>
