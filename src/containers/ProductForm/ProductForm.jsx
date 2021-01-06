@@ -166,7 +166,6 @@ const AddProduct = (props) => {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: (progress) => setPercent(calculatePercent(progress.loaded, progress.total))
       })
-      console.log(response);
 
       if (response.status === 200) {
 
