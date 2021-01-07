@@ -114,15 +114,13 @@ const AddProduct = () => {
     setFile(files[0]);
   };
 
-  console.log(defaultData.sub_category);
-
   const onSubmit = async (data) => {
 
     setLoading(true);
 
     const newProduct = {
       id: defaultData.id,
-      name: data.name,
+      title: data.name,
       type: data.type === undefined ? defaultData.type : data.type[0].value,
       description: data.description,
       image: defaultData.image,
@@ -279,7 +277,8 @@ const AddProduct = () => {
                 <FormFields>
                   <FormLabel>Price</FormLabel>
                   <Input
-                    type="number"
+                    type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
                     inputRef={register({ required: true })}
                     name="price"
                   />
@@ -287,15 +286,17 @@ const AddProduct = () => {
 
                 <FormFields>
                   <FormLabel>Sale Price</FormLabel>
-                  <Input type="number" inputRef={register} name="salePrice" />
+                  <Input type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
+                    inputRef={register} name="salePrice" />
                 </FormFields>
 
                 <FormFields>
                   <FormLabel>Discount In Percent</FormLabel>
                   <Input
-                    type="number"
-                    inputRef={register}
-                    name="discountInPercent"
+                    type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
+                    inputRef={register} name="discountInPercent"
                   />
                 </FormFields>
 

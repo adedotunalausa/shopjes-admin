@@ -198,7 +198,7 @@ export default function Products() {
                     style={{ margin: '15px 0' }}
                   >
                     <ProductCard
-                      title={item.name}
+                      title={item.title}
                       weight={item.unit}
                       image={item.image ? item.image : ""}
                       currency={CURRENCY}

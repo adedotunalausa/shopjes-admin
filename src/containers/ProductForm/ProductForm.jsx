@@ -113,7 +113,7 @@ const AddProduct = (props) => {
   const onSubmit = async (data) => {
     setLoading(true);
     const newProduct = {
-      name: data.name,
+      title: data.name,
       type: data.type[0].value,
       description: data.description,
       image: "",
@@ -289,7 +289,8 @@ const AddProduct = (props) => {
                 <FormFields>
                   <FormLabel>Price</FormLabel>
                   <Input
-                    type="number"
+                    type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
                     inputRef={register({ required: true })}
                     name="price"
                   />
@@ -297,15 +298,18 @@ const AddProduct = (props) => {
 
                 <FormFields>
                   <FormLabel>Sale Price</FormLabel>
-                  <Input type="number" inputRef={register} name="salePrice" />
+                  <Input
+                    type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
+                    inputRef={register} name="salePrice" />
                 </FormFields>
 
                 <FormFields>
                   <FormLabel>Discount In Percent</FormLabel>
                   <Input
-                    type="number"
-                    inputRef={register}
-                    name="discountInPercent"
+                    type="number" required min="0" step="0.01"
+                    pattern="^\d+(?:\.\d{1,2})?$"
+                    inputRef={register} name="discountInPercent"
                   />
                 </FormFields>
 
