@@ -46,9 +46,7 @@ export default function Login() {
         password: password,
       });
 
-      console.log(response.user.role);
-
-      if (!response.user || response.user.role.type !== 'shopjes_admin') {
+      if (!response.user || response.user.role.type !== 'shopjes_admin' || response.user.role.type === undefined) {
 
         await callApiAuth("/logout", "POST")
 
