@@ -46,9 +46,15 @@ export default function Login() {
         password: password,
       });
 
-      if (!response.user) {
+      console.log(response.user.role);
+
+      if (!response.user || response.user.role.type !== 'shopjes_admin') {
+
+        await callApiAuth("/logout", "POST")
+
         // eslint-disable-next-line no-throw-literal
         throw "Cannot login please try again!";
+
       }
 
       // console.log(response.user);
