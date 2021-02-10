@@ -46,12 +46,21 @@ export default function Login() {
         password: password,
       });
 
-      if (!response.user || response.user.role.type !== 'shopjes_admin' || response.user.role.type === undefined) {
+      if (!response.user) {
 
         await callApiAuth("/logout", "POST")
 
         // eslint-disable-next-line no-throw-literal
         throw "Cannot login please try again!";
+
+      }
+
+      if (response.user && (response.user.role.type !== 'shopjes_admin' || response.user.role.type === undefined)) {
+
+        await callApiAuth("/logout", "POST")
+
+        // eslint-disable-next-line no-throw-literal
+        throw "Cannot login, User not authorized!";
 
       }
 
@@ -64,6 +73,7 @@ export default function Login() {
       history.push("/");
 
     } catch (error) {
+      console.log(error);
       setErrorMsg(error);
     }
   };

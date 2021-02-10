@@ -29,3 +29,12 @@ export { FacialCare } from './FacialCare';
 export { Deodorant } from './Deodorant';
 export { BathOil } from './BathOil';
 // export { Minus } from './Minus';
+
+// new store categories
+export { HairExtension } from './HairExtension';
+export { Wigs } from './Wigs';
+export { HairCare } from './HairCare';
+export { SkinCare } from './SkinCare';
+export { Kids } from './Kids';
+export { MakeUps } from './MakeUps';
+export {Electricals} from './Electricals'

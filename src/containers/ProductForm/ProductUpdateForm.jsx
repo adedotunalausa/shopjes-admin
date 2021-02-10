@@ -120,7 +120,7 @@ const AddProduct = () => {
 
     const newProduct = {
       id: defaultData.id,
-      title: data.name,
+      title: data.title,
       type: data.type === undefined ? defaultData.type : data.type[0].value,
       description: data.description,
       image: defaultData.image,
@@ -128,8 +128,8 @@ const AddProduct = () => {
       unit: data.unit,
       salePrice: Number(data.salePrice),
       discountInPercent: Number(data.discountInPercent),
-      quantity: Number(data.quantity),
-      slug: data.name.toLowerCase().trim().split(" ").join("-"),
+      // quantity: Number(data.quantity),
+      slug: data.title.toLowerCase().trim().split(" ").join("-"),
       category: data.category === undefined ? defaultData.category : data.category[0].value,
       sub_category: data.subCategory === undefined ? defaultData.sub_category : data.subCategory[0].value
     };
@@ -163,7 +163,7 @@ const AddProduct = () => {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: (progress) => setPercent(calculatePercent(progress.loaded, progress.total))
       })
-      console.log(response);
+      // console.log(response);
 
       if (response.error) {
         toast.error("There was an error: " + response.message, {
@@ -191,7 +191,7 @@ const AddProduct = () => {
       console.log(error);
     }
 
-    console.log(newProduct, 'newProduct data');
+    // console.log(newProduct, 'newProduct data');
 
     setLoading(false);
 
@@ -256,8 +256,8 @@ const AddProduct = () => {
                 <FormFields>
                   <FormLabel>Name</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
-                    name="name"
+                    inputRef={register({ required: true })}
+                    name="title"
                   />
                 </FormFields>
 
@@ -300,10 +300,10 @@ const AddProduct = () => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Product Quantity</FormLabel>
                   <Input type="number" inputRef={register} name="quantity" />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Type</FormLabel>

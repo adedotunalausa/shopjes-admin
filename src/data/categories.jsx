@@ -5,7 +5,7 @@ export const categories = [
     slug: "hair-extension",
     products: [],
     type: "shop",
-    icon: "Beverage",
+    icon: "HairExtension",
     children: [
       {
         id: 2,
@@ -64,7 +64,7 @@ export const categories = [
     slug: "wigs",
     products: [],
     type: "shop",
-    icon: "FruitsVegetable",
+    icon: "Wigs",
     children: [
       {
         id: 13,
@@ -88,7 +88,7 @@ export const categories = [
     slug: "haircare",
     products: [],
     type: "shop",
-    icon: "Cooking",
+    icon: "HairCare",
     children: [
       {
         id: 29,
@@ -182,7 +182,7 @@ export const categories = [
     slug: "skin-care",
     products: [],
     type: "shop",
-    icon: "PetCare",
+    icon: "SkinCare",
     children: [
       {
         id: 43,
@@ -234,7 +234,7 @@ export const categories = [
     slug: "kids",
     products: [],
     type: "shop",
-    icon: "Breakfast",
+    icon: "Kids",
     children: [
       {
         id: 50,
@@ -293,7 +293,7 @@ export const categories = [
     slug: "make-ups",
     products: [],
     type: "shop",
-    icon: "Dairy",
+    icon: "MakeUps",
     children: [
       {
         id: 57,
@@ -324,7 +324,7 @@ export const categories = [
     slug: "electricals",
     products: [],
     type: "shop",
-    icon: "Snacks",
+    icon: "Electricals",
     children: [
       {
         id: 67,

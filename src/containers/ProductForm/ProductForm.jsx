@@ -121,7 +121,7 @@ const AddProduct = (props) => {
       unit: data.unit,
       salePrice: Number(data.salePrice),
       discountInPercent: Number(data.discountInPercent),
-      quantity: Number(data.quantity),
+      // quantity: Number(data.quantity),
       slug: data.name.toLowerCase().trim().split(" ").join("-"),
       category: data.category[0].value,
       sub_category: data.subCategory[0].value
@@ -268,7 +268,7 @@ const AddProduct = (props) => {
                 <FormFields>
                   <FormLabel>Name</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 40 })}
+                    inputRef={register({ required: true })}
                     name="name"
                   />
                 </FormFields>
@@ -313,14 +313,14 @@ const AddProduct = (props) => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Product Quantity</FormLabel>
                   <Input
                     type="number"
                     inputRef={register({ required: true })}
                     name="quantity"
                   />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Type</FormLabel>
