@@ -16,6 +16,7 @@ const Login = lazy(() => import('./containers/Login/Login'));
 const Dashboard = lazy(() => import('./containers/Dashboard/Dashboard'));
 const Products = lazy(() => import('./containers/Products/Products'));
 const Categories = lazy(() => import('./containers/Category/Category'))
+const Orders = lazy(() => import('./containers/Orders/Orders'))
 
 const isValidUser = () => {
 const user = localStorage.getItem('user');
@@ -83,6 +84,7 @@ export const Routes: React.FC = () => {
           <AdminLayout>
             <Suspense fallback={<InLineLoader />}>
               <h1>Orders Under Construction</h1>
+              <Orders />
             </Suspense>
           </AdminLayout>
         </PrivateRoute>
