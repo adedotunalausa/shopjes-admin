@@ -93,7 +93,7 @@ const BarChart = ({
     },
     series: [
       {
-        name: 'Sale',
+        name: 'Products',
         data: series,
       },
     ],

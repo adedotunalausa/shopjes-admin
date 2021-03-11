@@ -15,8 +15,11 @@ import {
   graphAmountDataHandler,
   monthlyRevenueHandler,
   monthlyCustomerHandler,
-  monthlyOrderHandler
-} from '../../lib/dashboardFunctions'
+  monthlyOrderHandler,
+  graphSalesDataHandler,
+  yearlyRevenueHandler,
+  yearlyPercentageDifference
+} from '../../lib/dashboard'
 
 const Col = withStyle(Column, () => ({
   '@media only screen and (max-width: 574px)': {
@@ -38,6 +41,10 @@ const isValidToken = () => {
 const Dashboard = () => {
   const [orders, setOrders] = useState([])
   const [customers, setCustomers] = useState([])
+  const currentMonth = moment().format("MMMM");
+  const previousMonth = moment().subtract(1, 'months').format("MMMM")
+  const currentYear = moment().format("YYYY");
+  const previousYear = moment().subtract(1, 'years').format("YYYY")
 
   useEffect(() => {
     callApiGet("/grouped-orders", "GET", isValidToken().jwt)
@@ -56,7 +63,6 @@ const Dashboard = () => {
   }, [])
   
   console.log("Orders", orders);
-  console.log("Customers", customers);
   
 
   const [css] = useStyletron();
@@ -82,6 +88,8 @@ const Dashboard = () => {
           <LineChart
             widgetTitle="Paid Orders"
             color={['#ea1c44']}
+            seriesName="Amount"
+            series={orders && graphAmountDataHandler(currentYear, orders)}
             categories={[
               'January',
               'February',
@@ -96,8 +104,6 @@ const Dashboard = () => {
               'November',
               'December',
             ]}
-            seriesName="Amount"
-            series={orders && graphAmountDataHandler(moment().format("YYYY"), orders)}
           />
         </Col>
       </Row>
@@ -108,9 +114,17 @@ const Dashboard = () => {
             title="Total Revenue"
             subtitle="(this month)"
             icon={<CoinIcon />}
-            price={`£${orders && monthlyRevenueHandler(orders).toLocaleString()}`}
-            indicator="up"
-            indicatorText="Revenue up"
+            price={`£${orders && monthlyRevenueHandler(currentMonth, orders).toLocaleString()}`}
+            indicator={
+              monthlyRevenueHandler(previousMonth, orders)
+                > monthlyRevenueHandler(currentMonth, orders)
+                ? "down" : "up"
+            }
+            indicatorText={
+              monthlyRevenueHandler(previousMonth, orders)
+                > monthlyRevenueHandler(currentMonth, orders)
+                ? "Revenue down" : "Revenue up"
+            }
             note="(this month)"
             link="#"
             linkText="Full Details"
@@ -121,9 +135,17 @@ const Dashboard = () => {
             title="Total Order Placed"
             subtitle="(this month)"
             icon={<CartIconBig />}
-            price={orders && monthlyOrderHandler(orders)}
-            indicator="down"
-            indicatorText="Order down"
+            price={orders && monthlyOrderHandler(currentMonth, orders)}
+            indicator={
+              monthlyOrderHandler(previousMonth, orders)
+                > monthlyOrderHandler(currentMonth, orders)
+                ? "down" : "up"
+            }
+            indicatorText={
+              monthlyOrderHandler(previousMonth, orders)
+                > monthlyOrderHandler(currentMonth, orders)
+                ? "Order down" : "Order up"
+            }
             note="(this month)"
             link="#"
             linkText="Full Details"
@@ -134,9 +156,17 @@ const Dashboard = () => {
             title="New Customer"
             subtitle="(this month)"
             icon={<UserIcon />}
-            price={orders && monthlyCustomerHandler(customers)}
-            indicator="up"
-            indicatorText="Customer up"
+            price={orders && monthlyCustomerHandler(currentMonth, customers)}
+            indicator={
+              monthlyCustomerHandler(previousMonth, customers)
+                > monthlyCustomerHandler(currentMonth, customers)
+                ? "down" : "up"
+            }
+            indicatorText={
+              monthlyCustomerHandler(previousMonth, customers)
+                > monthlyCustomerHandler(currentMonth, customers)
+                ? "Customer down" : "Customer up"
+            }
             note="(this month)"
             link="#"
             linkText="Full Details"
@@ -150,11 +180,22 @@ const Dashboard = () => {
             widgetTitle="Sale History"
             colors={['#ea1c44']}
             prefix="£"
-            totalValue="192,564"
-            position="up"
-            percentage="1.38%"
-            text="More than last year"
-            series={[44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65]}
+            totalValue={orders && yearlyRevenueHandler(currentYear, orders)
+              .toLocaleString()}
+            position={
+              yearlyRevenueHandler(previousYear, orders)
+                > yearlyRevenueHandler(currentYear, orders)
+                  ? "down" : "up"
+            }
+            percentage={
+              `${yearlyPercentageDifference(currentYear, previousYear, orders)}%`
+            }
+            text={
+              yearlyRevenueHandler(previousYear, orders)
+                > yearlyRevenueHandler(currentYear, orders)
+                  ? "Lower than last year" : "More than last year"
+            }
+            series={graphSalesDataHandler(currentYear, orders)}
             categories={[
               'January',
               'February',
