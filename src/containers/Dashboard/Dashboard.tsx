@@ -118,12 +118,16 @@ const Dashboard = () => {
             indicator={
               monthlyRevenueHandler(previousMonth, orders)
                 > monthlyRevenueHandler(currentMonth, orders)
-                ? "down" : "up"
+                ? "down" : monthlyRevenueHandler(previousMonth, orders)
+                > monthlyRevenueHandler(currentMonth, orders)
+                ? "up" : ""
             }
             indicatorText={
               monthlyRevenueHandler(previousMonth, orders)
                 > monthlyRevenueHandler(currentMonth, orders)
-                ? "Revenue down" : "Revenue up"
+                ? "Revenue down" : monthlyRevenueHandler(previousMonth, orders)
+                > monthlyRevenueHandler(currentMonth, orders)
+                ? "Revenue up" : "Revenue constant"
             }
             note="(this month)"
             link="#"
@@ -139,12 +143,16 @@ const Dashboard = () => {
             indicator={
               monthlyOrderHandler(previousMonth, orders)
                 > monthlyOrderHandler(currentMonth, orders)
-                ? "down" : "up"
+                ? "down" : monthlyOrderHandler(previousMonth, orders)
+                < monthlyOrderHandler(currentMonth, orders)
+                ? "up" : ""
             }
             indicatorText={
               monthlyOrderHandler(previousMonth, orders)
                 > monthlyOrderHandler(currentMonth, orders)
-                ? "Order down" : "Order up"
+                ? "Order down" : monthlyOrderHandler(previousMonth, orders)
+                > monthlyOrderHandler(currentMonth, orders)
+                ? "Order up" : "Order constant"
             }
             note="(this month)"
             link="#"
@@ -160,12 +168,16 @@ const Dashboard = () => {
             indicator={
               monthlyCustomerHandler(previousMonth, customers)
                 > monthlyCustomerHandler(currentMonth, customers)
-                ? "down" : "up"
+                ? "down" : monthlyCustomerHandler(previousMonth, customers)
+                < monthlyCustomerHandler(currentMonth, customers)
+                ? "up" : ""
             }
             indicatorText={
               monthlyCustomerHandler(previousMonth, customers)
                 > monthlyCustomerHandler(currentMonth, customers)
-                ? "Customer down" : "Customer up"
+                ? "Customer down" : monthlyCustomerHandler(previousMonth, customers)
+                  > monthlyCustomerHandler(currentMonth, customers) ? "Customer up"
+                  : "Customer constant"
             }
             note="(this month)"
             link="#"
@@ -185,7 +197,8 @@ const Dashboard = () => {
             position={
               yearlyRevenueHandler(previousYear, orders)
                 > yearlyRevenueHandler(currentYear, orders)
-                  ? "down" : "up"
+                ? "down" :yearlyRevenueHandler(previousYear, orders)
+                < yearlyRevenueHandler(currentYear, orders) ? "up" : ""
             }
             percentage={
               `${yearlyPercentageDifference(currentYear, previousYear, orders)}%`

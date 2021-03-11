@@ -71,10 +71,12 @@ export const monthlyRevenueHandler = (month, inputData) => {
 }
 
 export const yearlyPercentageDifference = (currentYear, previousYear, inputData) => {
-  const check = yearlyRevenueHandler(currentYear, inputData)
+  const checkGreater = yearlyRevenueHandler(currentYear, inputData)
     > yearlyRevenueHandler(previousYear, inputData)
+  const checkEqual = yearlyRevenueHandler(currentYear, inputData)
+    === yearlyRevenueHandler(previousYear, inputData)
 
-  if (check) {
+  if (checkGreater) {
     let numerator = yearlyRevenueHandler(currentYear, inputData)
       - yearlyRevenueHandler(previousYear, inputData)
 
@@ -82,6 +84,8 @@ export const yearlyPercentageDifference = (currentYear, previousYear, inputData)
 
     return output * 100;
 
+  } else if (checkEqual) {
+    return 0
   } else {
     let numerator = yearlyRevenueHandler(previousYear, inputData)
       - yearlyRevenueHandler(currentYear, inputData)
