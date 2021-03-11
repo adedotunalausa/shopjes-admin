@@ -151,7 +151,7 @@ const Dashboard = () => {
               monthlyOrderHandler(previousMonth, orders)
                 > monthlyOrderHandler(currentMonth, orders)
                 ? "Order down" : monthlyOrderHandler(previousMonth, orders)
-                > monthlyOrderHandler(currentMonth, orders)
+                < monthlyOrderHandler(currentMonth, orders)
                 ? "Order up" : "No increment"
             }
             note="(this month)"
@@ -176,7 +176,7 @@ const Dashboard = () => {
               monthlyCustomerHandler(previousMonth, customers)
                 > monthlyCustomerHandler(currentMonth, customers)
                 ? "Customer down" : monthlyCustomerHandler(previousMonth, customers)
-                  > monthlyCustomerHandler(currentMonth, customers) ? "Customer up"
+                  < monthlyCustomerHandler(currentMonth, customers) ? "Customer up"
                   : "No increment"
             }
             note="(this month)"
