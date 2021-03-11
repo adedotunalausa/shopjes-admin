@@ -120,14 +120,14 @@ const Dashboard = () => {
                 > monthlyRevenueHandler(currentMonth, orders)
                 ? "down" : monthlyRevenueHandler(previousMonth, orders)
                 > monthlyRevenueHandler(currentMonth, orders)
-                ? "up" : ""
+                ? "up" : "constant"
             }
             indicatorText={
               monthlyRevenueHandler(previousMonth, orders)
                 > monthlyRevenueHandler(currentMonth, orders)
                 ? "Revenue down" : monthlyRevenueHandler(previousMonth, orders)
                 > monthlyRevenueHandler(currentMonth, orders)
-                ? "Revenue up" : "Revenue constant"
+                ? "Revenue up" : "No increment"
             }
             note="(this month)"
             link="#"
@@ -145,14 +145,14 @@ const Dashboard = () => {
                 > monthlyOrderHandler(currentMonth, orders)
                 ? "down" : monthlyOrderHandler(previousMonth, orders)
                 < monthlyOrderHandler(currentMonth, orders)
-                ? "up" : ""
+                ? "up" : "constant"
             }
             indicatorText={
               monthlyOrderHandler(previousMonth, orders)
                 > monthlyOrderHandler(currentMonth, orders)
                 ? "Order down" : monthlyOrderHandler(previousMonth, orders)
                 > monthlyOrderHandler(currentMonth, orders)
-                ? "Order up" : "Order constant"
+                ? "Order up" : "No increment"
             }
             note="(this month)"
             link="#"
@@ -170,14 +170,14 @@ const Dashboard = () => {
                 > monthlyCustomerHandler(currentMonth, customers)
                 ? "down" : monthlyCustomerHandler(previousMonth, customers)
                 < monthlyCustomerHandler(currentMonth, customers)
-                ? "up" : ""
+                ? "up" : "constant"
             }
             indicatorText={
               monthlyCustomerHandler(previousMonth, customers)
                 > monthlyCustomerHandler(currentMonth, customers)
                 ? "Customer down" : monthlyCustomerHandler(previousMonth, customers)
                   > monthlyCustomerHandler(currentMonth, customers) ? "Customer up"
-                  : "Customer constant"
+                  : "No increment"
             }
             note="(this month)"
             link="#"

@@ -48,6 +48,11 @@ const StickerCard = ({
             <IosArrowDown width="9px" height="11px" /> {indicatorText}
             <Note> {note}</Note>
           </Text>
+        ) : indicator === 'constant' ? (
+          <Text style={{ color: '#FC6687' }}>
+            ... {indicatorText}
+            <Note> {note}</Note>
+          </Text>
         ) : (
           ''
         )
